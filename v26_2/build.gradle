@@ -1,0 +1,15 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+// The Minecraft version this jar is built for and the mod dependencies built against
+// it. Everything else is shared, see gradle/loom-common.gradle.
+ext {
+	minecraft_version = '26.2'
+	fabric_api_version = '0.160.0+26.2'
+	yacl_version = '3.9.6+26.2-fabric'
+	modmenu_version = '20.0.2'
+}
+
+apply from: rootProject.file('gradle/loom-common.gradle')

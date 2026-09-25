@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "sweeping-view",
+	"version": "${version}",
+	"name": "Sweeping View",
+	"description": "Client-side visualiser for the vanilla sweeping attack: draws the target box and the 3 block reach sphere of any player that is holding a sword and aiming at an entity.",
+	"authors": [
+		"wlm3201"
+	],
+	"contact": {
+		"sources": "https://github.com/wlm3201/sweeping-view",
+		"issues": "https://github.com/wlm3201/sweeping-view/issues"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/sweeping-view/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.sweepingview.SweepingView"
+		],
+		"client": [
+			"com.sweepingview.client.SweepingViewClient"
+		],
+		"modmenu": [
+			"com.sweepingview.client.SweepingViewModMenu"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=25",
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": ">=3.9.6"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

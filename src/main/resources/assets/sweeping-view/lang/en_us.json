@@ -1,0 +1,19 @@
+{
+	"sweeping-view.config.title": "Sweeping View",
+	"sweeping-view.config.category.box": "Target Box",
+	"sweeping-view.config.category.sphere": "Reach Sphere",
+	"sweeping-view.config.group.stroke": "Wire Frame",
+	"sweeping-view.config.group.fill": "Faces",
+	"sweeping-view.option.boxStrokeEnabled": "Wire frame",
+	"sweeping-view.option.boxStrokeEnabled.desc": "Draws the outline of the volume a sweep attack hits.",
+	"sweeping-view.option.boxStrokeColor": "Wire frame colour",
+	"sweeping-view.option.boxStrokeColor.desc": "Colour of the box outline.",
+	"sweeping-view.option.boxFillEnabled": "Faces",
+	"sweeping-view.option.boxFillEnabled.desc": "Fills the sweep volume with a translucent colour.",
+	"sweeping-view.option.boxFillColor": "Face colour",
+	"sweeping-view.option.boxFillColor.desc": "Colour of the box faces. The alpha byte sets how dense they are.",
+	"sweeping-view.option.sphereEnabled": "Reach sphere",
+	"sweeping-view.option.sphereEnabled.desc": "Draws the 3 block reach limit around the attacker.",
+	"sweeping-view.option.sphereColor": "Sphere colour",
+	"sweeping-view.option.sphereColor.desc": "Colour of the sphere surface. The alpha byte sets how dense it is."
+}

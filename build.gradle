@@ -1,0 +1,17 @@
+// The root project only aggregates the per version subprojects, so it applies no
+// plugins of its own. Running a task here (for example `./gradlew build`) runs it in
+// every subproject as well.
+//
+// All of the actual build logic lives in gradle/loom-common.gradle, which each
+// version project applies from its own build.gradle after declaring the versions it
+// targets, and the source it compiles lives once in src/.
+
+// Every version project has its own runClient, so a bare `./gradlew runClient` would
+// match all of them and start one client after the other. Claiming the name here
+// turns that into a message naming the task that was actually meant.
+tasks.register('runClient') {
+	doFirst {
+		throw new GradleException(
+			"Pick a Minecraft version: './gradlew :v26_1_2:runClient' or './gradlew :v26_2:runClient'.")
+	}
+}

@@ -1,0 +1,108 @@
+// Shared build logic for every supported Minecraft version.
+//
+// Each version project applies this from its own build.gradle, after declaring the
+// versions it targets (minecraft_version, fabric_api_version, yacl_version and
+// modmenu_version), and every one of them compiles the same src/ tree - so the mod
+// code exists exactly once and only the versions differ.
+
+repositories {
+	// Loom already adds the Minecraft, Fabric and Maven Central repositories. This one is only here
+	// for the mod dependencies below, which are published on Modrinth.
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"sweeping-view" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+// The source tree is shared rather than copied: every version project points its main
+// and client source sets at the same directories instead of carrying its own copy.
+sourceSets {
+	main {
+		java.srcDir rootProject.file("src/main/java")
+		resources.srcDir rootProject.file("src/main/resources")
+	}
+	client {
+		java.srcDir rootProject.file("src/client/java")
+		resources.srcDir rootProject.file("src/client/resources")
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${loader_version}"
+
+	// Fabric API. Hooks the level extraction event the renderer is driven from.
+	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+	// YACL (YetAnotherConfigLib) - builds the in-game settings screen behind the mod's config.
+	implementation "maven.modrinth:yacl:${yacl_version}"
+
+	// Mod Menu - the in-game entry point to that screen. Optional at runtime, but pulled into the
+	// dev client as well so the screen stays reachable while developing.
+	implementation "maven.modrinth:modmenu:${modmenu_version}"
+}
+
+// A single release ships one jar per Minecraft version, so the file name has to say
+// which one it is. The version goes into archivesName rather than the usual
+// -<version> suffix, so the result reads sweeping-view-1.0.0+26.2.jar instead of
+// carrying the version twice.
+base {
+	archivesName = "sweeping-view-${project.version}+${minecraft_version}"
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+	archiveVersion.set("")
+}
+
+def modVersion = project.version.toString()
+def minecraftVersion = project.minecraft_version.toString()
+
+processResources {
+	inputs.property "version", modVersion
+	inputs.property "minecraft_version", minecraftVersion
+
+	filesMatching("fabric.mod.json") {
+		// The manifest is shared, so its Minecraft dependency is templated as well and
+		// resolves to ~26.1.2 or ~26.2 depending on which project expands it.
+		expand "version": modVersion, "minecraft_version": minecraftVersion
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+	from(rootProject.file("LICENSE")) {
+		rename { "${it}_sweeping-view" }
+	}
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+}

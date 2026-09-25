@@ -1,0 +1,19 @@
+{
+	"sweeping-view.config.title": "横扫视图",
+	"sweeping-view.config.category.box": "目标方框",
+	"sweeping-view.config.category.sphere": "攻击距离球",
+	"sweeping-view.config.group.stroke": "线框",
+	"sweeping-view.config.group.fill": "面框",
+	"sweeping-view.option.boxStrokeEnabled": "线框",
+	"sweeping-view.option.boxStrokeEnabled.desc": "绘制横扫攻击命中范围的轮廓。",
+	"sweeping-view.option.boxStrokeColor": "线框颜色",
+	"sweeping-view.option.boxStrokeColor.desc": "方框轮廓的颜色。",
+	"sweeping-view.option.boxFillEnabled": "面框",
+	"sweeping-view.option.boxFillEnabled.desc": "用半透明颜色填充横扫范围。",
+	"sweeping-view.option.boxFillColor": "面框颜色",
+	"sweeping-view.option.boxFillColor.desc": "方框各面的颜色，透明度决定浓淡。",
+	"sweeping-view.option.sphereEnabled": "攻击距离球",
+	"sweeping-view.option.sphereEnabled.desc": "绘制攻击者周围 3 格的攻击距离上限。",
+	"sweeping-view.option.sphereColor": "球面颜色",
+	"sweeping-view.option.sphereColor.desc": "球面的颜色，透明度决定浓淡。"
+}

@@ -1,0 +1,18 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+rootProject.name = 'sweeping-view'
+
+// One project per supported Minecraft version. They all compile the same src/ tree
+// (wired up in gradle/loom-common.gradle), so the mod code exists exactly once and
+// only the versions each jar is built against differ.
+include 'v26_1_2'
+include 'v26_2'

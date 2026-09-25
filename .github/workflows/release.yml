@@ -1,0 +1,88 @@
+# Builds the mod and publishes it to a GitHub release whenever a version tag
+# (for example v1.0.0) is pushed. Can also be started by hand from the Actions
+# tab to re-release an existing tag.
+
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release, for example v1.0.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      # Resolved first so the checkout below can pin itself to the tag being released.
+      - name: resolve version
+        id: version
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          tag="${INPUT_TAG:-$GITHUB_REF_NAME}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.version.outputs.tag }}
+
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+          cache: 'gradle'
+
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # -P wins over gradle.properties, so the jar is named after the tag even if
+      # the version there has drifted.
+      - name: build
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: ./gradlew build "-Pversion=$VERSION"
+
+      - name: show artifacts
+        run: ls -l */build/libs/
+
+      - name: publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # Re-running is expected (a failed build, a re-tagged commit), so drop any
+          # release already on this tag. The tag itself is left alone.
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release delete "$TAG" --yes
+          fi
+
+          flags=(--title "$TAG" --generate-notes)
+          if [[ "$TAG" == *-* ]]; then
+            flags+=(--prerelease)
+          fi
+
+          # One jar per supported Minecraft version, all built from this commit. The
+          # sources jars are build side products and stay out of the release.
+          shopt -s nullglob
+          jars=()
+          for jar in */build/libs/*.jar; do
+            [[ "$jar" == *-sources.jar ]] && continue
+            jars+=("$jar")
+          done
+          printf 'releasing:\n'; printf '  %s\n' "${jars[@]}"
+
+          gh release create "$TAG" "${flags[@]}" "${jars[@]}"
