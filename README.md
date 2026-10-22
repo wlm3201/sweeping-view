@@ -1,4 +1,6 @@
-# Sweeping View（横扫视图）
+# Sweeping View · 横扫视图
+
+[English](README.en.md) | 简体中文
 
 一个显示Minecraft横扫攻击判定范围的Fabric客户端模组。
 
@@ -19,22 +21,3 @@
 | 面框颜色 | `#FF5050` |
 | 球体开关 | 开启      |
 | 球体颜色 | `#FF5050` |
-
-## 构建
-
-一份源码同时面向多个 Minecraft 版本，通过 `settings.gradle` 中的两个子项目共享根目录的 `src/`：
-
-```powershell
-# 构建全部版本，产物在 v26_1_2/build/libs 与 v26_2/build/libs
-.\gradlew build
-
-# 启动指定版本的开发客户端
-.\gradlew :v26_1_2:runClient
-.\gradlew :v26_2:runClient
-```
-
-产物命名形如 `sweeping-view-1.0.0+26.2.jar`。
-
-## 许可
-
-[CC0 1.0](LICENSE)。

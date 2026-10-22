@@ -11,8 +11,8 @@ pluginManagement {
 
 rootProject.name = 'sweeping-view'
 
-// One project per supported Minecraft version. They all compile the same src/ tree
-// (wired up in gradle/loom-common.gradle), so the mod code exists exactly once and
-// only the versions each jar is built against differ.
-include 'v26_1_2'
-include 'v26_2'
+new File(settingsDir, 'versions').eachDir { dir ->
+	def projectName = ':v' + dir.name.replace('.', '_').replace('-', '_')
+	include projectName
+	project(projectName).projectDir = dir
+}
